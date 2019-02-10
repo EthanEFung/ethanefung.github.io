@@ -8,10 +8,30 @@
   &__navigation {
     min-height: 2vh;
     background-color: $quaternary-color;
+    color: black;
+
     position: sticky;
     top: 0px;
-    padding-top: 50px;
+    padding: 25px;
     z-index: 2;
+
+    display: flex;
+    justify-content: flex-end;
+
+    &__links {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+
+      height: 100%;
+      width: 33vw;
+    }
+
+    &__link {
+      flex: 1 0 50px;
+
+    }
   }
 
   &__header {
