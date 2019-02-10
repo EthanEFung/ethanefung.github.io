@@ -5,7 +5,7 @@ import './landing-page.scss';
 
 class LandingPage extends Component {
   render() {
-    return (<div className="c-landing-page c-landing-page__container">    
+    return (<div className="c-page c-landing-page c-landing-page__container">    
       <header className="c-landing-page__header">
         <div className="c-landing-page__header__content">
           <img 
@@ -57,7 +57,7 @@ class LandingPage extends Component {
           </Link>
           <Link to={this.props.location.pathname} className="c-landing-page__article__card" onClick={this.props.handleResumeModal}>
             <h3 className="o-header-text c-landing-page__article__card__header">Resume</h3>
-            <p className="c-landing-page__article__card__description">See what I'm working&nbsp;on, and what I've built.</p>
+            <p className="c-landing-page__article__card__description">See what I'm working on, and what I've&nbsp;built.</p>
           </Link>
           <Link to="/cases" className="c-landing-page__article__card">
             <h3 className="o-header-text c-landing-page__article__card__header">Case Studies</h3>

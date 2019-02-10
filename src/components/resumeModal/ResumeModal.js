@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './resume-modal.scss'
 
 
@@ -17,21 +17,32 @@ class ResumeModal extends Component {
       <div className='c-resume-modal'>
         <div className='c-resume-modal__container'>
           <article className='c-resume' onClick={(e) => {}}>
-            <section className='c-resume__header'>
+            <section className='c-resume__section c-resume__header'>
               <h1 className='o-header c-resume__header-text'>
                 Ethan Emmanuel Fung – Full Stack Software Engineer
               </h1>
               <ul className='c-resume__contact-info__container'>
-                <li className='c-resume__contact-info__item'>626-354-8475</li>
-                <li className='c-resume__contact-info__item'>EthanEFung@gmail.com</li>
-                <li className='c-resume__contact-info__item'>linkedin.com/in/e-emmanuel-fung</li>
-                <li className='c-resume__contact-info__item'>ethanefung.github.io</li>
-                <li className='c-resume__contact-info__item'>github.com/EthanEFung</li>
-                <li className='c-resume__contact-info__item'>codepen.io/EthanEFung</li>
+                <li className='c-resume__contact-info__item'>
+                  626-354-8475
+                </li>
+                <li className='c-resume__contact-info__item'>
+                  EthanEFung@gmail.com
+                </li>
+                <li className='c-resume__contact-info__item'>
+                  linkedin.com/in/e-emmanuel-fung
+                </li>
+                <li className='c-resume__contact-info__item'>
+                  ethanefung.github.io
+                </li>
+                <li className='c-resume__contact-info__item'>
+                  github.com/EthanEFung
+                </li>
+                <li className='c-resume__contact-info__item'>
+                  codepen.io/EthanEFung
+                </li>
               </ul>
             </section>
-            <hr />
-            <nav className="c-resume__navigation__container">
+            <nav className="c-resume__section c-resume__navigation__container">
               <button className={`o-header
                   c-resume__navigation__item
                   c-resume__navigation__experience
@@ -39,7 +50,7 @@ class ResumeModal extends Component {
                 }
                 onClick={this.handleResume.bind(this, 0)}
               >
-                SOFTWARE<br/>EXPERIENCE
+                EXPERIENCE
               </button>
               <button className={`o-header
                   c-resume__navigation__item
@@ -48,7 +59,7 @@ class ResumeModal extends Component {
                 }
                 onClick={this.handleResume.bind(this, 1)}
               >
-                PERSONAL<br/>PROJECTS
+                PROJECTS
               </button>
               <button 
               className={`o-header
@@ -58,12 +69,12 @@ class ResumeModal extends Component {
                 }
                 onClick={this.handleResume.bind(this, 2)}
               >
-                EDUCATION & PRIOR&nbsp;WORK
+                PRIOR&nbsp;WORK
               </button>
             </nav>
-            <hr/>
+            
             {[
-              <section className='c-resume__section__container c-resume__experience'>
+              <section className='c-resume__section c-resume__section__container c-resume__experience'>
                 <h2 className='o-header
                   c-resume__section__sub-header
                   c-resume__experience__header
@@ -86,7 +97,7 @@ class ResumeModal extends Component {
                   students to the highest average assessment scores of
                   ten&nbsp;groups.</p>
               </section>,
-              <section className='c-resume__section__container c-resume__projects'>
+              <section className='c-resume__section c-resume__section__container c-resume__projects'>
                 <h2 className='o-header
                   c-resume__section__sub-header
                   c-resume__projects__header
@@ -95,8 +106,7 @@ class ResumeModal extends Component {
                   variables and animations, ES6 and Chrome Extension APIs. Application
                   monitors user specified website usage and stores minutes locally.
                   Users can add, delete, and update timers to monitor specific sites.
-                  A future feature will generate reports using Sendgrid API.
-                </p>
+                  A future feature will generate reports using Sendgrid API.</p>
 
                 <h2 className='o-header
                   c-resume__section__sub-header
@@ -105,7 +115,8 @@ class ResumeModal extends Component {
                 <p>Created the configuration page for the Mechanic’s Dashboard, and
                   developed the Appointments feature. The UI utilized Bootstrap,
                   FullCalendar.io, Booking.js, React, and Redux. The feature was built
-                  on Express and persisted using Sequelize, Postgres and Timekit.io.</p>
+                  on Express and persisted using Sequelize, Postgres and Timekit.io.
+                </p>
 
                 <h2 className='o-header
                   c-resume__section__sub-header
@@ -115,13 +126,26 @@ class ResumeModal extends Component {
                   data persistence using MongoDB, REST protocol using mLab, and version
                   control (Github).</p>
               </section>,
-              <section className='c-resume__section__container c-resume__education'>
+              <section className='c-resume__section c-resume__section__container c-resume__education'>
                 <ul>
-                  <li>Medical Assistant at Comprehensive Cardiovascular Specialists – 2014-2017</li>
-                  <li>Bachelor of Arts in Sociology at Boston University – 2009-2013</li>
-                  <li>Advanced Immersion Certificate in Software Engineering at Hack Reactor – Sept 2017</li>
-                  <li>AI Programming with Python Certificate at Udacity - Present</li>
-                  <li>Javascript Algorithms and Data Structures Certificate from freeCodeCamp - May 2018</li>
+                  <li>
+                    Medical Assistant at Comprehensive Cardiovascular Specialists –
+                    2014-2017
+                  </li>
+                  <li>
+                    Bachelor of Arts in Sociology at Boston University – 2009-2013
+                  </li>
+                  <li>
+                    Advanced Immersion Certificate in Software Engineering at
+                    Hack Reactor – Sept 2017
+                  </li>
+                  <li>
+                    AI Programming with Python Certificate at Udacity - Present
+                  </li>
+                  <li>
+                    Javascript Algorithms and Data Structures Certificate from
+                    freeCodeCamp - May 2018
+                  </li>
                 </ul>
               </section>
             ][this.state.sectionIndex]}
