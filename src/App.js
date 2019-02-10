@@ -17,7 +17,6 @@ class App extends Component {
 
   handleResumeModal(e) {
     e.preventDefault();
-    console.log('setting modal');
     this.setState({showResumeModal: !this.state.showResumeModal});
   }
 
@@ -28,7 +27,7 @@ class App extends Component {
         <nav className="c-app__navigation">
           <div className="c-app__navigation__links">
             <NavLink className="c-app__navigation__link" exact to='/'>Home</NavLink>
-            <NavLink className="c-app__navigation__link" to="" onClick={this.handleResumeModal}>Resume</NavLink>
+            <NavLink className="c-app__navigation__link" to='' onClick={this.handleResumeModal}>Resume</NavLink>
             <NavLink className="c-app__navigation__link" to='/cases'>Case&nbsp;Studies</NavLink>
           </div>
         </nav>
@@ -37,10 +36,10 @@ class App extends Component {
         <Route
           exact
           path='/'
-          render={routeProps=> <LandingPage handleResumeModal={this.handleResumeModal} {...routeProps} />}
-        ></Route>
-        <Route path='/biography' component={BiographyPage}></Route>
-        <Route path='/cases' component={CaseStudiesPage}></Route>
+          render={routeProps => <LandingPage handleResumeModal={this.handleResumeModal} {...routeProps} />}
+        />
+        <Route path='/biography' component={BiographyPage} />
+        <Route path='/cases' component={CaseStudiesPage} />
         <footer className="c-app__footer"></footer>
       </div>
     );

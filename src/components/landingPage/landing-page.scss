@@ -1,0 +1,148 @@
+@import '../../variables.scss';
+.c-landing-page {
+  &__header {
+    padding: 4vmin 3vmin;
+    
+    background-color: $primary-color;
+    color: $secondary-color;
+    
+    &__content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      padding-bottom: 4vmin;
+      min-height: 90vh;
+
+      border: 1vmin solid white;
+    }
+    
+
+    &__profile-img {
+      max-width: 30vmin;
+
+      margin: 6vmin;
+      margin-top: 0;
+      padding: 1vmin;
+    
+      border: .5vmin solid $secondary-color;
+      border-radius: 50%;
+    }
+  
+    &__name {
+      letter-spacing: 1rem;
+      line-height: 1.2em;
+      font-weight: 500;
+    }
+
+    &__job-title {
+      letter-spacing: .1rem;
+      line-height: 1.2em;
+      font-weight: 100;
+      text-decoration: underline;
+    }
+  }
+
+  &__call-to-action {
+    z-index: 1;
+    position: absolute;
+    top: 95vh;
+    right: 15vmin;
+
+    width: calc(9 * 6vmin);
+    height: calc(11 * 5.5vmin);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    
+    padding: 3vmin;
+    background-color: $secondary-color;
+
+    border-radius: 5px;
+    box-shadow: 0px 2px 3px #ccc;
+
+    &:hover, :focus {
+      box-shadow: 0px 2px 1px #bbb;
+    }
+
+    input, label {
+      flex: 1;
+      font-size: calc(10px + 1vmin)
+    }
+
+    label {
+      padding-bottom: 0;
+    }
+
+    input {
+      margin-bottom: 1vmin;
+      border: none;
+      border-bottom: 1px solid #ccc;
+
+      &:focus {
+        box-shadow: none;
+        border-bottom: 1px solid black;
+      }
+    }
+
+    &__submit {
+      flex-basis: 30px;
+      background-color: #ccc;
+      border-radius: 5px;
+    }
+    
+  }
+
+  &__article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: 0 10vmin;
+    padding-top: 20vmin;
+
+    min-height: 100vh;
+    background-color: $tertiary-color;
+
+    &__header {
+      padding-left: 5vh;
+    }
+
+    &__cards {
+      display: flex;
+      justify-content: center;
+    }
+
+    &__card {
+      flex: 1 0;
+      margin: 5vmin;
+      margin-right: 0;
+      padding: 3vh;
+
+      height: 20vw;
+      max-width: 300px;
+      max-height: 300px;
+
+      background-color: $secondary-color;
+      box-shadow: 0px 2px 1px 1px #ccc;
+      border-radius: 3px;
+
+      text-align: center;
+
+      &:hover {
+        box-shadow: 0px 2px 3px 1px #bbb;
+      }
+
+      &:last-of-type {
+        margin-right: 5vmin;
+      }
+
+      p {
+        margin-top: 5vw;
+      }
+    }
+  }
+}
