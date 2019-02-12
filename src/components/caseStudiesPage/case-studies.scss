@@ -1,0 +1,43 @@
+@import '../../variables.scss';
+
+.c-case-studies {
+  &-page {
+    height: 120vmax;
+    &__container {
+      display: flex;
+      
+    }
+  }
+}
+
+
+.c-page {
+  &__sidebar {
+    top: 8vmin;
+    left: 0;
+    width: 20vw;
+
+    text-align: right;
+    padding-right: 1vmin;
+    
+    background-color: #eee;
+    border-right: 1px solid $secondary-color;
+  }
+
+  &__content {
+    right:0;
+    top: 10vmin;
+    width: 80vw;
+    color: $secondary-color;
+
+    border-bottom: 1px solid $secondary-color;
+    padding: 3vmin;
+
+    display: flex;
+  }
+}
+
+.c-content {
+  flex: 1;
+  border: 1vmin solid $secondary-color;
+}

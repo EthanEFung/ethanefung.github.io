@@ -1,7 +1,7 @@
 @import '../../variables.scss';
 .c-landing-page {
   &__header {
-    padding: 4vmin 3vmin;
+    padding: 3vmin;
     
     background-color: $primary-color;
     color: $secondary-color;
@@ -11,7 +11,6 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
-
       padding-bottom: 4vmin;
       min-height: 90vh;
 
@@ -114,6 +113,7 @@
     &__cards {
       display: flex;
       justify-content: center;
+      line-height: 1.6em;
     }
 
     &__card {

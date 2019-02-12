@@ -47,3 +47,29 @@ p {
 .o-header-text {
   font-family: $secondary-font;
 }
+
+.o-jumbo-cards {
+  display: block;
+  width: calc(11 * 4vw);
+  height: calc(8 * 4vw);
+
+  border-radius: 1vmin;
+
+  box-shadow: 1px 2px 3px #001;
+
+  margin-top: 5vh;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+  
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &--light {
+    background-color: $tertiary-color;
+  }
+}

@@ -1,14 +1,23 @@
 @import '../../variables.scss';
+
+
 .c-biography {
   color: $primary-color;
+  line-height: 1.6em;
+  background-color: $quinary-color;
 
   &-page {
+    background-color:$tertiary-color;
     &__container {
       width: 100vw;
       display: flex;
       justify-content: center;
-      background-color: $secondary-color;
+      
       padding-bottom: 15vmin;
+
+      & * {
+        background-color: $secondary-color;
+      }
     }
   }
 
@@ -22,6 +31,7 @@
     max-width: 760px;
 
     border: 2vmin solid $primary-color;
+    border-radius: 3vmin;
   }
   
   &__section {
