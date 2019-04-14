@@ -150,9 +150,8 @@ export default function TestingWithNightwatch(props) {
           <hr />
           <p>
             Its common in many codebases today to have components that are shared
-            in various places in the app. We can do with this knowledge is to create
-            webpage objects and create methods that run commands and assertions
-            that are specific to that component.
+            in various places in the app. What we can do with this knowledge is create
+            webpage objects with methods that are specific to that component.
 
             Recently Nightwatch has been adding support for page objects. But like our
             development team a simple solution could be creating webpage objects as js
