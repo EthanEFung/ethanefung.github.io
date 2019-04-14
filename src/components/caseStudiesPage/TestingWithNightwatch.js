@@ -158,7 +158,7 @@ export default function TestingWithNightwatch(props) {
 
             Recently Nightwatch has been adding support for page objects. But like our
             development team a simple solution could be creating webpage objects as js
-            classes and declaring commands specific to each component.
+            classes and declaring methods specific to each component.
 
           </p>
           <Code>{`
