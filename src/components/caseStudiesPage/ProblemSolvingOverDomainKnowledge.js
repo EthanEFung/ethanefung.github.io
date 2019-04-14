@@ -93,8 +93,8 @@ function ProblemSolvingOverDomainKnowledge(props) {
             What matters most for engineers is their ability to problem solve.
             Every framework, library or coding language is an ends to this means. Don't 
             fall into the same mistake I made by trying to impress people with your tech
-            stack. No one is impressed. Instead focus on a business problem, search for what 
-            a tool you know will work and if none come to mind <em>then</em> learn
+            stack. No one is impressed. Instead focus on a business problem, search for 
+            a tool you <em>know</em> will work and if none come to mind <em>then</em> learn
             that new tool everyone has been talking about.
           </p>
         </section>
