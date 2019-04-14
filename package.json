@@ -2,8 +2,10 @@
   "name": "ethanefung.github.io",
   "version": "2.1.0",
   "private": true,
+  "homepage": "https://ethanefung.github.io",
   "dependencies": {
     "classnames": "^2.2.6",
+    "gh-pages": "^2.0.1",
     "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
     "qs": "^6.6.0",
@@ -15,6 +17,8 @@
     "react-syntax-highlighter": "^10.2.1"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
