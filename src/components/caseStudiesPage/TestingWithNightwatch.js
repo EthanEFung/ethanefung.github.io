@@ -34,13 +34,13 @@ export default function TestingWithNightwatch(props) {
             sample of how to write a test in Nighwatch:
           </p>
           <Code>{`
-  'Checks Carrier Load Info Card on Delivered Loads Tab': (browser) => {
+  'Checks User on Profile Tab': (browser) => {
     browser
-      .waitForElementPresent('.test-sourcing-link', 5000)
+      .waitForElementPresent('.test-source-link', 5000)
       .click('.test-sourcing-link')
-      .waitForElementVisible('#test-delivered', 5000)
-      .click('#test-delivered')
-      .waitForElementVisible('select[name*="loadStatus"]', 10000)
+      .waitForElementVisible('#test-user', 5000)
+      .click('#test-user')
+      .waitForElementVisible('select[name*="userStatus"]', 10000)
   },
           `}</Code>
           <p>
@@ -49,13 +49,14 @@ export default function TestingWithNightwatch(props) {
             maintainability of the test.
           </p>
           <Code>{`
-  'Creates a load when successful': (browser) => {
+  'Creates a destination': (browser) => {
     browser
       .waitForElementNotVisible('.test-tab-loader', 5000)
-      .waitForElementVisible('.js-open-loads-menu', 5000)
-      .click('.js-open-loads-menu')
-      .waitForElementVisible('#add-load-manually', 1500)
-      .click('#add-load-manually')
+      .waitForElementVisible('.js-open-menu', 5000)
+      .click('.open-menu')
+
+      .waitForElementVisible('#add-manually', 1500)
+      .click('#add-manually')
 
       .waitForElementVisible('input[name*="business_name"]', 3000)
       .setValue('input[name="miles"]', 1)
@@ -64,28 +65,31 @@ export default function TestingWithNightwatch(props) {
       .setValue('.pickup-0 input[name*="address"]', '1')
 
       .waitForElementVisible('.pickup-0 .test-pickup-city .Select-input input', 5000)
-      .setValue('.pickup-0 .test-pickup-city .Select-input input', 'Amherst')
+      .setValue('.pickup-0 .test-pickup-city .Select-input input', 'Los Angeles')
+
       .pause(2000)
+
       .click('.pickup-0 .test-pickup-city')
       .waitForElementVisible('.pickup-0 .test-pickup-city .Select-option[id*="-option-0"]', 5000)
       .click('.pickup-0 .test-pickup-city .Select-option[id*="-option-0"]')
       .click('.pickup-0 .test-pickup-zip')
+
       .waitForElementVisible('.pickup-0 .test-pickup-zip .Select-option[id*="-option-0"]', 5000)
       .click('.pickup-0 .test-pickup-zip .Select-option[id*="-option-0"]')
 
-      .setValue('.pickup-0 input[name*="contact_name"]', 'Test Guy')
+      .setValue('.pickup-0 input[name*="contact_name"]', 'Test Contact')
       .setValue('.pickup-0 input[name*="contact_phone"]', '4243424343')
 
-      .clearValue('input[name="loadLocations.0.time_start"]')
-      .setValue('input[name="loadLocations.0.time_start"]', '0200')
+      .clearValue('input[name="userLocations.0.time_start"]')
+      .setValue('input[name="userLocations.0.time_start"]', '0200')
 
-      .clearValue('input[name="loadLocations.0.time_end"]')
-      .setValue('input[name="loadLocations.0.time_end"]', '0700')
+      .clearValue('input[name="userLocations.0.time_end"]')
+      .setValue('input[name="userLocations.0.time_end"]', '0700')
 
       .click('.js-add-pickup')
       .getValue('input[name="id"]', function(result) {
         this.assert.equal(result.status, 0);
-        newLoadId = result.value;
+        newUserId = result.value;
       })
 
       .waitForElementVisible('.pickup-1 input[name*="business_name"]', 3000)
@@ -98,13 +102,13 @@ export default function TestingWithNightwatch(props) {
             Perhaps the answer then is to simplify workflows by creating variables:
           </p>
           <Code>{`
-  const loadId = getLoadId();
-  const loadSelector = \`div[data-load-id="\${loadId}"]\`;
+  const userId = getuserId();
+  const userSelector = \`div[data-user-id="\${userId}"]\`;
   browser
     .waitForElementPresent('.test-sourcing-link', 10000)
     .click('.test-sourcing-link')
-    .waitForElementPresent(loadSelector, 5000)
-    .waitForElementVisible(\`\${loadSelector} .test-load-id\`, 3000);
+    .waitForElementPresent(userSelector, 5000)
+    .waitForElementVisible(\`\${userSelector} .test-user-id\`, 3000);
           `}</Code>
           <p>
             That might work. However, I can tell you from first hand experience that
@@ -112,33 +116,33 @@ export default function TestingWithNightwatch(props) {
             the logic, sometimes by adding variables the readability worsens.
           </p>
           <Code>{`
-  'Send Load Info to Carrier': (browser, loadID, mainDone) => {
-    const loadSelector = \`div[data-load-id="\${loadID}"]\`;
-    const viewCarriersWrapperSelector = \`\${loadSelector} .test-view-carriers\`;
-    const carrierTypeDropdownSelector = \`
-      \${viewCarriersWrapperSelector} .test-carrier-type
+  'Send Info to user': (browser, userId, mainDone) => {
+    const userSelector = \`div[data-user-id="\${userId}"]\`;
+    const viewUserWrapperSelector = \`\${userSelector} .test-view-users\`;
+    const userTypeDropdownSelector = \`
+      \${viewUserWrapperSelector} .test-user-type
     \`;
-    const allCarriersSelector = \`
-      \${carrierTypeDropdownSelector} option[value="all"]
+    const allusersSelector = \`
+      \${userTypeDropdownSelector} option[value="all"]
     \`;
-    const nonAllInCarrierSelector = \`
-      \${viewCarriersWrapperSelector}
-      .test-carrier-card[data-carrier-id="\${nonAllInCarrierId}"]
+    const nonAllInuserSelector = \`
+      \${viewUserWrapperSelector}
+      .test-user-card[data-user-id="\${nonAllInuserId}"]
     \`;
-    const carrierSelector = \`
-      \${viewCarriersWrapperSelector}
-      .test-carrier-card[data-carrier-id="\${carrierId}"]
+    const userSelector = \`
+      \${viewUserWrapperSelector}
+      .test-user-card[data-user-id="\${userId}"]
     \`;
-    const carrierNameSelector = \`
-      \${carrierSelector} .test-carrier-name
+    const userNameSelector = \`
+      \${userSelector} .test-user-name
     \`;
-    const pickCarrierSelector = \`
-      \${carrierSelector} .test-pick-carrier input[type="checkbox"]
+    const pickuserSelector = \`
+      \${userSelector} .test-pick-user input[type="checkbox"]
     \`;
   
     browser
-      .waitForElementVisible(\`\${loadSelector} .test-card-dropdown\`, 5000)
-      .click(\`\${loadSelector} .test-card-dropdown\`)
+      .waitForElementVisible(\`\${userSelector} .test-card-dropdown\`, 5000)
+      .click(\`\${userSelector} .test-card-dropdown\`)
       .waitForElementVisible('.js-open-map', 5000)
 
       ...
@@ -163,18 +167,18 @@ export default function TestingWithNightwatch(props) {
           </p>
           <Code>{`
   export class WebPageSpecificForm {
-    constructor(browser, loadId) {
-      this.loadId = loadId;
+    constructor(browser, userId) {
+      this.userId = userId;
       this.browser = browser;
     }
     assertFormValues(values) {
       // have complex logic specific to this web form
     }
     clickIcon(name) {
-      // have complex logic specific to this web form
+
     }
     submitForm() {
-      // have complex logic specific to this web form
+
     }
   }
           `}</Code>
@@ -187,18 +191,17 @@ export default function TestingWithNightwatch(props) {
             improves a little in readability.
           </p>
           <Code>{`
-  'BACO can view most recent active load location': (browser) => {
-    const {load, pickupCity, deliveryCity} = data;
+  'Can view most recent active user location': (browser) => {
+    const {user, pickupCity, deliveryCity} = data;
 
-    const loadCard = new LoadCard(browser, load.get('id')); // page object
-    loadCard.clickIcon('load active location');
+    const userCard = new userCard(browser, user.get('id')); // page object
+    userCard.clickIcon('user profile');
 
-    browser.waitForElementVisible('.active-locations-modal');
-
-    const modal = new ActiveLoadLocationModal(browser); // page object
+    const modal = new WebPageSpecificModal(browser); // page object
+    modal.assertPresent();
     modal.assertLocationValues({
-      title: 'ACTIVE LOAD LOCATION',
-      loadId: load.get('iid'),
+      title: 'Active User',
+      userId: user.get('iid'),
       origin: pickupCity.name,
       lastLocation: pickupCity.name,
       destination: deliveryCity.name
