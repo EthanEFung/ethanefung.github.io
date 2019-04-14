@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import {NavLink, Route} from 'react-router-dom';
-import {LandingPage, BiographyPage, ResumeModal, CaseStudiesPage} from './components';
+import {loadReCaptcha} from 'react-recaptcha-google'
+import {LandingPage, BiographyPage, ResumeModal, CaseStudiesPage, KeepItSimpleStupid} from './components';
 import './App.scss';
 import './utilities.scss'
 
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.handleResumeModal = this.handleResumeModal.bind(this)
-  }
-
   state = {
     showResumeModal: false,
   }
 
-  handleResumeModal(e) {
+  componentDidMount() {
+    loadReCaptcha();
+    window.title = 'EthanEFung.github.io'
+  }
+
+  handleResumeModal= (e) => {
     e.preventDefault();
     this.setState({showResumeModal: !this.state.showResumeModal});
   }

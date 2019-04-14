@@ -91,7 +91,6 @@
       background-color: #ccc;
       border-radius: 5px;
     }
-    
   }
 
   &__article {
@@ -101,7 +100,7 @@
     align-items: flex-start;
 
     padding: 0 10vmin;
-    padding-top: 20vmin;
+    padding-top: 5vmin;
 
     min-height: 100vh;
     background-color: $tertiary-color;

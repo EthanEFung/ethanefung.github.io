@@ -6,7 +6,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   background-color: #282c34;
-  line-height: 1.2em;
+  line-height: 1.6em;
   font-family: $primary-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -44,14 +44,23 @@ p {
   font-size: calc(10px + 1vmin);
 }
 
-.o-header-text {
-  font-family: $secondary-font;
+.u-text {
+  &--light {
+    color: $tertiary-color;
+  }
 }
 
-.o-jumbo-cards {
+.o-header-text {
+  font-family: $secondary-font;
+  &--light {
+    color: $tertiary-color;
+  }
+}
+
+.o-jumbo-card {
   display: block;
-  width: calc(11 * 4vw);
-  height: calc(8 * 4vw);
+  width: calc(11 * 3vw);
+  height: calc(8 * 3vw);
 
   border-radius: 1vmin;
 
@@ -59,17 +68,29 @@ p {
 
   margin-top: 5vh;
 
+  padding: 1vmin 4vmin;
+  line-height: 2rem;
+
   &:first-of-type {
     margin-top: 0;
   }
   
+  
+
+  &--light {
+    background-color: $tertiary-color;
+  }
+
+  h3 {
+    font-size: 1.6rem;
+  }
+}
+
+.o-jumbo-cards {
   &__container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  &--light {
-    background-color: $tertiary-color;
+    padding-bottom: 10vmin;
   }
 }

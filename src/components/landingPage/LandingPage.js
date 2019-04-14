@@ -1,12 +1,16 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import profile from '../../assets/profile.jpg';
-import './landing-page.scss';
+import {ReCaptcha} from 'react-recaptcha-google';
 import qs from 'qs'
 import {pick} from 'lodash';
 
-class LandingPage extends Component {
 
+import profile from '../../assets/profile.jpg';
+import './landing-page.scss';
+
+
+
+class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
@@ -15,6 +19,7 @@ class LandingPage extends Component {
 
   state = {
     showCallToAction: true,
+    isHuman: false,
     name: '',
     email: '',
     phone: '',
@@ -23,6 +28,19 @@ class LandingPage extends Component {
     comments: '',
   }
 
+  componentDidMount() {
+    console.log('landing page', this.props);
+  }
+
+  onLoadRecaptcha = () => {
+    if (this.captchaDemo) {
+      this.captchaDemo.reset();
+    }
+  }
+  onVerifyRecaptcha = (token) => {
+    console.log(token)
+    this.setState({isHuman: true});
+  }
   handleChange(event) {
     const {target} = event;
     const {value} = target;
@@ -80,7 +98,8 @@ class LandingPage extends Component {
         </div>
       </header>
 
-      {this.state.showCallToAction && <form className="c-landing-page__call-to-action">
+      {/* use once recaptcha is implemented */}
+      {false && <form className="c-landing-page__call-to-action">
         <header className="c-landing-page__call-to-action__header"><h3 className="o-header-text">Let's Connect</h3></header>
   
         <label className="o-label c-landing-page__call-to-action__label" htmlFor="name">Name*</label>
@@ -101,7 +120,20 @@ class LandingPage extends Component {
         <label className="o-label c-landing-page__call-to-action__label" htmlFor="comments">Comments</label>
         <input className="comments o-input c-landing-page__call-to-action__input" id='comments' onChange={this.handleChange}></input>
 
-        <button className="c-landing-page__call-to-action__submit" type="submit" onClick={this.handleSubmit}>Submit</button>
+        <ReCaptcha
+          ref={(el) => {this.captchaDemo = el}}
+          size='normal'
+          render='explicit'
+          sitekey={''}
+          onLoadCallback={this.onLoadRecaptcha}
+          verifyCallback={this.onVerifyRecaptcha}
+          />
+        <button
+          className="c-landing-page__call-to-action__submit"
+          type="submit"
+          onClick={this.handleSubmit}
+          disabled={!this.state.isHuman}
+        >Submit</button>
       </form>}
 
       <article className="c-landing-page__article u-text-color--secondary">
