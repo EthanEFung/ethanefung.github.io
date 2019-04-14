@@ -1,10 +1,14 @@
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import classNames from 'classnames';
 
 import Quote from '../Quote';
 
 function ProblemSolvingOverDomainKnowledge(props) {
+  useEffect(() => {
+    window.scrollTo(0,0);
+  }, [])
+
   const classes = classNames(
     props.className,
     'o-content',

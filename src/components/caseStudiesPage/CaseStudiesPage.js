@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Route, Link} from 'react-router-dom';
 import Home from './Home';
 
@@ -8,6 +8,9 @@ import TestingWithNightwatch from './TestingWithNightwatch';
 import './case-studies.scss';
 
 function CaseStudiesPage () {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
   return (
     <div className='c-page

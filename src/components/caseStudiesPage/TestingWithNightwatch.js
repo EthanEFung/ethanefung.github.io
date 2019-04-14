@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import classNames from 'classnames';
 import Code from '../Code';
 
 export default function TestingWithNightwatch(props) {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    })
 
     const classes = classNames(
       props.className,
