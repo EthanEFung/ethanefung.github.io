@@ -203,8 +203,9 @@ export default function TestingWithNightwatch(props) {
       lastLocation: pickupCity.name,
       destination: deliveryCity.name
     });
-    modal.assertFormNotPresent();
+   
     modal.close();
+    modal.assertNotPresent();
   },
           `}</Code>
         </section>
