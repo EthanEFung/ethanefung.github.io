@@ -194,7 +194,7 @@ export default function TestingWithNightwatch(props) {
   'Can view most recent active user location': (browser) => {
     const {user, pickupCity, deliveryCity} = data;
 
-    const userCard = new userCard(browser, user.get('id')); // page object
+    const userCard = new UserCard(browser, user.get('id')); // page object
     userCard.clickIcon('user profile');
 
     const modal = new WebPageSpecificModal(browser); // page object

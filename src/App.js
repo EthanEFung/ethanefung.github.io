@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {NavLink, Route} from 'react-router-dom';
 import {loadReCaptcha} from 'react-recaptcha-google'
-import {LandingPage, BiographyPage, ResumeModal, CaseStudiesPage, KeepItSimpleStupid} from './components';
+import {LandingPage, BiographyPage, ResumeModal, CaseStudiesPage} from './components';
 import './App.scss';
 import './utilities.scss'
 
