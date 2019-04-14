@@ -13,7 +13,7 @@ class App extends Component {
 
   componentDidMount() {
     loadReCaptcha();
-    window.title = 'EthanEFung.github.io'
+    document.title = '-- Ethan E Fung --';
   }
 
   handleResumeModal= (e) => {
