@@ -64,7 +64,7 @@ paginate = 5
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Terminal"
+    title = "Ethan E. Fung"
     subtitle = "A simple, retro theme for Hugo"
     owner = ""
     keywords = ""
