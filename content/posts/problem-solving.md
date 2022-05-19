@@ -17,7 +17,7 @@ draft : false
 
 Years ago when I was interviewing for the first time, I distinctly remember a coding challenge I received that asked me to create an app that allows users to enter a prefix and receive a list of words that contained the entered prefix. I was given a little over two hours to complete the challenge. Eager to impress, I tried to spin up a React app, which at the time was the latest and greatest front-end js framework at the time (this was before create-react-app was a thing), and Redux because that technology was cool and new. I started drawing up a mockup of the UI and thought:
 
-_"This is app is going to look so sick!"_
+"This is app is going to look so sick!"
 
 Of course, nothing worked. I ran into the issues trying to sync my front-end with the server, and once I had figured out what the problem was, I ended up with a bunch of redux logic sprinkled all over the app (none of which was actually used). In the end all I had to show for was rendering a checkered board with alternating colors.
 
