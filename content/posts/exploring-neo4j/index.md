@@ -1,7 +1,7 @@
 ---
 title: "Simplifying Data Relationships - Exploring Neo4j"
 date: 2022-05-29T17:34:31-07:00
-cover: "./neo4j-cover.png"
+cover: "./posts/exploring-neo4j/neo4j-cover.png"
 tags: ["Graph DB", "Neo4j", "Cypher", "NBA"]
 keywords: ["Cypher", "Neo4j"]
 description: ""
