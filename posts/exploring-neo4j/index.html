@@ -158,7 +158,7 @@ Within transaction, I can write some Cypher the driver will execute.</p><div cla
 of having a full name, a short name, city, and tricode for each team that is received
 from the &ldquo;fetchTeams&rdquo; function.</p><p>A similar process was done to load the NBA players of the 2021 season. Namely, all
 of the players were fetched from the NBA api, a driver and neo4j session was created
-and a transaction took place where we created nodes in our graph database of each player.</p><p>Using Neo4j&rsquo;s database browser, this is what the player data looks like</p><p><img src=/neo4j-25-players.png alt="25 Neo4j player nodes"></p><p>At this point the data doesn&rsquo;t look interesting because we only have two kinds of
+and a transaction took place where we created nodes in our graph database of each player.</p><p>Using Neo4j&rsquo;s database browser, this is what the player data looks like</p><p><img src=./neo4j-25-players.png alt="25 Neo4j player nodes"></p><p>At this point the data doesn&rsquo;t look interesting because we only have two kinds of
 nodes in our graph database. So, at this point I used the neo4j driver in a similar
 process to relate the players to their respective teams. Here is the Cypher query
 that was executed per player per team.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>relatePlaysForQuery</span> = <span style=color:#e6db74>`
@@ -173,9 +173,9 @@ relationship between team and player. We describe a one way relationship between
 the two nodes, and give it a title <code>PLAYS_FOR</code> and we can even pass key-value pairs
 to describe the attributes of the relationship like the years that the player had
 started and ended their seasons with a team. But what do these relationships
-look like visually?</p><p><img src=/neo4j-2620-nodes.png alt="Too Many Nodes"></p><p>This amount of data with can be overwhelming. However, Neo4j and Cypher not only have
+look like visually?</p><p><img src=./neo4j-2620-nodes.png alt="Too Many Nodes"></p><p>This amount of data with can be overwhelming. However, Neo4j and Cypher not only have
 powerful ways of creating many-to-many relationships, but also quickly querying for
-specific data. Coming back to the example of finding all of Ben Simmon&rsquo;s potential teammates.</p><p><img src=/neo4j-simmons-teammates.png alt="Graph of Ben Simmons Teammates"></p><p>Looking at the data, we gain some interesting insights as well, like all the players who
+specific data. Coming back to the example of finding all of Ben Simmon&rsquo;s potential teammates.</p><p><img src=./neo4j-simmons-teammates.png alt="Graph of Ben Simmons Teammates"></p><p>Looking at the data, we gain some interesting insights as well, like all the players who
 have played on both teams that Ben Simmons has played for. We can tell that the
 dataset is incomplete. Because only the years of season start and end are captured, we
 can&rsquo;t distinguish the players who were Ben Simmons teammates from the players that were

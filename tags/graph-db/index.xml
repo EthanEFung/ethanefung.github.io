@@ -176,7 +176,7 @@ from the &amp;ldquo;fetchTeams&amp;rdquo; function.&lt;/p>
 of the players were fetched from the NBA api, a driver and neo4j session was created
 and a transaction took place where we created nodes in our graph database of each player.&lt;/p>
 &lt;p>Using Neo4j&amp;rsquo;s database browser, this is what the player data looks like&lt;/p>
-&lt;p>&lt;img src="https://EthanEFung.github.io/neo4j-25-players.png" alt="25 Neo4j player nodes">&lt;/p>
+&lt;p>&lt;img src="./neo4j-25-players.png" alt="25 Neo4j player nodes">&lt;/p>
 &lt;p>At this point the data doesn&amp;rsquo;t look interesting because we only have two kinds of
 nodes in our graph database. So, at this point I used the neo4j driver in a similar
 process to relate the players to their respective teams. Here is the Cypher query
@@ -194,11 +194,11 @@ the two nodes, and give it a title &lt;code>PLAYS_FOR&lt;/code> and we can even 
 to describe the attributes of the relationship like the years that the player had
 started and ended their seasons with a team. But what do these relationships
 look like visually?&lt;/p>
-&lt;p>&lt;img src="https://EthanEFung.github.io/neo4j-2620-nodes.png" alt="Too Many Nodes">&lt;/p>
+&lt;p>&lt;img src="./neo4j-2620-nodes.png" alt="Too Many Nodes">&lt;/p>
 &lt;p>This amount of data with can be overwhelming. However, Neo4j and Cypher not only have
 powerful ways of creating many-to-many relationships, but also quickly querying for
 specific data. Coming back to the example of finding all of Ben Simmon&amp;rsquo;s potential teammates.&lt;/p>
-&lt;p>&lt;img src="https://EthanEFung.github.io/neo4j-simmons-teammates.png" alt="Graph of Ben Simmons Teammates">&lt;/p>
+&lt;p>&lt;img src="./neo4j-simmons-teammates.png" alt="Graph of Ben Simmons Teammates">&lt;/p>
 &lt;p>Looking at the data, we gain some interesting insights as well, like all the players who
 have played on both teams that Ben Simmons has played for. We can tell that the
 dataset is incomplete. Because only the years of season start and end are captured, we
