@@ -1,8 +1,6 @@
 ---
 title : "Problem Solving Over Domain Knowledge"
 date : "2022-05-18T09:04:47-07:00"
-author : "Ethan Fung"
-authorTwitter : "" #do not include @
 cover : ""
 tags : ["beginner", "imposter syndrome", "career advice"]
 keywords : ["", ""]
