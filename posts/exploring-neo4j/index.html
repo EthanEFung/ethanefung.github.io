@@ -1,0 +1,186 @@
+<!doctype html><html lang=en><head><title>Simplifying Data Relationships - Exploring Neo4j :: Ethan E. Fung</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A few years ago I learned that the nba releases json files daily to the public. Immediately, I jumped on the opportunity to build nba related applications, yet one thing that always stood out to me about their api is the difficulty building relationships between its data collections. Take for example this snippet of json for a collection of players:
+[ { &amp;#34;firstName&amp;#34;: &amp;#34;Ben&amp;#34;, &amp;#34;lastName&amp;#34;: &amp;#34;Simmons&amp;#34;, &amp;#34;teams&amp;#34;: [ { &amp;#34;teamId&amp;#34;: &amp;#34;1610612755&amp;#34;, &amp;#34;seasonStart&amp;#34;: &amp;#34;2016&amp;#34;, &amp;#34;seasonEnd&amp;#34;: &amp;#34;2020&amp;#34; }, { &amp;#34;teamId&amp;#34;: &amp;#34;1610612751&amp;#34;, &amp;#34;seasonStart&amp;#34;: &amp;#34;2021&amp;#34;, &amp;#34;seasonEnd&amp;#34;: &amp;#34;2021&amp;#34; } ], &amp;#34;draft&amp;#34;: { &amp;#34;teamId&amp;#34;: &amp;#34;1610612755&amp;#34;, &amp;#34;pickNum&amp;#34;: &amp;#34;1&amp;#34;, &amp;#34;roundNum&amp;#34;: &amp;#34;1&amp;#34;, &amp;#34;seasonYear&amp;#34;: &amp;#34;2016&amp;#34; }, } ] Here we have we have some basic information about the player such as his first and last name."><meta name=keywords content="Cypher,Neo4j"><meta name=robots content="noodp"><link rel=canonical href=https://EthanEFung.github.io/posts/exploring-neo4j/><link rel=stylesheet href=https://EthanEFung.github.io/assets/style.css><link rel=apple-touch-icon href=https://EthanEFung.github.io/img/apple-touch-icon-192x192.png><link rel="shortcut icon" href=https://EthanEFung.github.io/img/favicon/orange.png><meta name=twitter:card content="summary"><meta name=twitter:site content><meta name=twitter:creator content><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="og:title" content="Simplifying Data Relationships - Exploring Neo4j"><meta property="og:description" content="A few years ago I learned that the nba releases json files daily to the public. Immediately, I jumped on the opportunity to build nba related applications, yet one thing that always stood out to me about their api is the difficulty building relationships between its data collections. Take for example this snippet of json for a collection of players:
+[ { &amp;#34;firstName&amp;#34;: &amp;#34;Ben&amp;#34;, &amp;#34;lastName&amp;#34;: &amp;#34;Simmons&amp;#34;, &amp;#34;teams&amp;#34;: [ { &amp;#34;teamId&amp;#34;: &amp;#34;1610612755&amp;#34;, &amp;#34;seasonStart&amp;#34;: &amp;#34;2016&amp;#34;, &amp;#34;seasonEnd&amp;#34;: &amp;#34;2020&amp;#34; }, { &amp;#34;teamId&amp;#34;: &amp;#34;1610612751&amp;#34;, &amp;#34;seasonStart&amp;#34;: &amp;#34;2021&amp;#34;, &amp;#34;seasonEnd&amp;#34;: &amp;#34;2021&amp;#34; } ], &amp;#34;draft&amp;#34;: { &amp;#34;teamId&amp;#34;: &amp;#34;1610612755&amp;#34;, &amp;#34;pickNum&amp;#34;: &amp;#34;1&amp;#34;, &amp;#34;roundNum&amp;#34;: &amp;#34;1&amp;#34;, &amp;#34;seasonYear&amp;#34;: &amp;#34;2016&amp;#34; }, } ] Here we have we have some basic information about the player such as his first and last name."><meta property="og:url" content="https://EthanEFung.github.io/posts/exploring-neo4j/"><meta property="og:site_name" content="Ethan E. Fung"><meta property="og:image" content="https://EthanEFung.github.io/neo4j-cover.png"><meta property="og:image:width" content="2048"><meta property="og:image:height" content="1024"><meta property="article:published_time" content="2022-05-29 17:34:31 -0700 -0700"></head><body class=orange><div class="container headings--one-size"><header class=header><div class=header__inner><div class=header__logo><a href=/><div class=logo>Ethan E. Fung</div></a></div><div class=menu-trigger>menu</div></div><nav class=menu><ul class="menu__inner menu__inner--desktop"><li><a href=/about>About Me</a></li><li><a href=https://pinnate-astrodon-8fd.notion.site/Ethan-E-Fung-4ddf47de9e1d4efc9c7ce8b5b9bc012c>Resume</a></li></ul><ul class="menu__inner menu__inner--mobile"><li><a href=/about>About Me</a></li><li><a href=https://pinnate-astrodon-8fd.notion.site/Ethan-E-Fung-4ddf47de9e1d4efc9c7ce8b5b9bc012c>Resume</a></li></ul></nav></header><div class=content><div class=post><h1 class=post-title><a href=https://EthanEFung.github.io/posts/exploring-neo4j/>Simplifying Data Relationships - Exploring Neo4j</a></h1><div class=post-meta><span class=post-date>2022-05-29</span>
+<span class=post-reading-time>:: 7 min read (1291 words)</span></div><span class=post-tags>#<a href=https://EthanEFung.github.io/tags/graph-db/>Graph DB</a>&nbsp;
+#<a href=https://EthanEFung.github.io/tags/neo4j/>Neo4j</a>&nbsp;
+#<a href=https://EthanEFung.github.io/tags/cypher/>Cypher</a>&nbsp;
+#<a href=https://EthanEFung.github.io/tags/nba/>NBA</a>&nbsp;</span>
+<img src=https://EthanEFung.github.io/neo4j-cover.png class=post-cover alt="Simplifying Data Relationships - Exploring Neo4j" title="Cover Image"><div class=post-content><div><p>A few years ago I learned that the nba releases json files daily to the public.
+Immediately, I jumped on the opportunity to build nba related applications, yet
+one thing that always stood out to me about their api is the difficulty
+building relationships between its data collections. Take for example this
+snippet of json for a collection of players:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>[
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;firstName&#34;</span>: <span style=color:#e6db74>&#34;Ben&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;lastName&#34;</span>: <span style=color:#e6db74>&#34;Simmons&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;teams&#34;</span>: [
+</span></span><span style=display:flex><span>          {
+</span></span><span style=display:flex><span>              <span style=color:#f92672>&#34;teamId&#34;</span>: <span style=color:#e6db74>&#34;1610612755&#34;</span>,
+</span></span><span style=display:flex><span>              <span style=color:#f92672>&#34;seasonStart&#34;</span>: <span style=color:#e6db74>&#34;2016&#34;</span>,
+</span></span><span style=display:flex><span>              <span style=color:#f92672>&#34;seasonEnd&#34;</span>: <span style=color:#e6db74>&#34;2020&#34;</span>
+</span></span><span style=display:flex><span>          },
+</span></span><span style=display:flex><span>          {
+</span></span><span style=display:flex><span>              <span style=color:#f92672>&#34;teamId&#34;</span>: <span style=color:#e6db74>&#34;1610612751&#34;</span>,
+</span></span><span style=display:flex><span>              <span style=color:#f92672>&#34;seasonStart&#34;</span>: <span style=color:#e6db74>&#34;2021&#34;</span>,
+</span></span><span style=display:flex><span>              <span style=color:#f92672>&#34;seasonEnd&#34;</span>: <span style=color:#e6db74>&#34;2021&#34;</span>
+</span></span><span style=display:flex><span>          }
+</span></span><span style=display:flex><span>      ],
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;draft&#34;</span>: {
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;teamId&#34;</span>: <span style=color:#e6db74>&#34;1610612755&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;pickNum&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;roundNum&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;seasonYear&#34;</span>: <span style=color:#e6db74>&#34;2016&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>]
+</span></span></code></pre></div><p>Here we have we have some basic information about the player such as his
+first and last name. We also have some more complex data that provides
+information about his relationship to other entities. For, example this
+data shows the teams that Simmons has played for, and for how long (&ldquo;seasonStart&rdquo;
+and &ldquo;seasonEnd&rdquo;) but not any more information about each team except for
+a team identifier. In the data above we know that Ben Simmons was the number
+one pick of the 2016 draft, but the team that he was drafted to cannot
+be determined solely by the teamId. This requires us to make another api
+request for the NBA Teams:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>[
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;nickname&#34;</span>: <span style=color:#e6db74>&#34;76ers&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;urlName&#34;</span>: <span style=color:#e6db74>&#34;sixers&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;teamId&#34;</span>: <span style=color:#e6db74>&#34;1610612755&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;altCityName&#34;</span>: <span style=color:#e6db74>&#34;Philadelphia&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;tricode&#34;</span>: <span style=color:#e6db74>&#34;PHI&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;teamShortName&#34;</span>: <span style=color:#e6db74>&#34;Philadelphia&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;divName&#34;</span>: <span style=color:#e6db74>&#34;Atlantic&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;isAllStar&#34;</span>: <span style=color:#66d9ef>false</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;isNBAFranchise&#34;</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;confName&#34;</span>: <span style=color:#e6db74>&#34;East&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;fullName&#34;</span>: <span style=color:#e6db74>&#34;Philadelphia 76ers&#34;</span>,
+</span></span><span style=display:flex><span>  }, 
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// ...
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>]
+</span></span></code></pre></div><p>Only once we receive the collection of teams, can we compare the team id of the draft
+object against each team object and infer that Ben Simmons was drafted to the
+Philadelphia 76ers in 2016.</p><p>The usage of ids or keys to show relationships between entities, is a standard
+practice because it can be inpractical to fit all of an api&rsquo;s data into a single
+response. Generally REST apis will have several endpoints that clients can use, but the
+data the client receives from one requests might be too little (such as the example
+here) or too much. However, utilizing ids or keys and requiring that clients make
+subsequent requests has the benefit of allowing REST apis to scale data and give the
+client the most relevant information while keeping response payloads minimal in size.</p><p>One downside to this approach is the difficultly clients face modeling many-to-many
+relationships. For example if I was interested in knowing which players have played on
+the same team as Ben Simmons, then the following process would need to occur:</p><ol><li>request from the api all players</li><li>iterate over all players creating a hashmap with the teamId as the key and a
+collection of players as the value</li><li>iterate and find a player with first name &ldquo;Ben&rdquo; and last name &ldquo;Simmons&rdquo;</li><li>iterate over Ben Simmon&rsquo;s teams</li><li>utilizing the teamId of the Simmon&rsquo;s team iterate over the hash map value for the team</li><li>check to see if the player is not Ben Simmons and iterate over the player&rsquo;s teams</li><li>check to see if the player&rsquo;s teams is the team in question</li><li>if conditions in step 6 and 7 are met, check to see if the season durations of the
+player and the season duration of Simmons overlap</li></ol><h1 id=embracing-the-relationships>Embracing the relationships<a href=#embracing-the-relationships class=hanchor arialabel=Anchor>&#8983;</a></h1><p>I want to answer questions like the question posed in the section above, but with
+the complexity abstracted away. This is where I learned about Cypher: the
+querying language that takes a similiar declarative style as SQL but without the
+complex joins required in relational databases to request related data.
+Using, Cypher I&rsquo;m able to write simple statements about multiple collections, but
+first I needed to build out the dataset. To build this set I utilized Neo4j as my graph
+database.</p><p>Using Go, I built an api scraper that loads the nba data into a Neo4j instance. First,
+I focused on loading the NBA teams into the instance.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>TeamsJSON</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>League</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Standard</span> []<span style=color:#a6e22e>FetchedTeam</span> <span style=color:#e6db74>`json:&#34;standard&#34;`</span>
+</span></span><span style=display:flex><span>	} <span style=color:#e6db74>`json:&#34;league&#34;`</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>FetchedTeam</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>FullName</span>       <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;fullName&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>City</span>           <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;city&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>TeamShortName</span>  <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;teamShortName&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>IsNBAFranchise</span> <span style=color:#66d9ef>bool</span>   <span style=color:#e6db74>`json:&#34;isNBAFranchise&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ConferenceName</span> <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;confName&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Tricode</span>        <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;tricode&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>DivisionName</span>   <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;divName&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>IsAllStar</span>      <span style=color:#66d9ef>bool</span>   <span style=color:#e6db74>`json:&#34;isAllStar&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Nickname</span>       <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;nickname&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>URLName</span>        <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;urlName&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>TeamID</span>         <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;teamId&#34;`</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>fetchTeams</span>() ([]<span style=color:#a6e22e>FetchedTeam</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>teams</span> <span style=color:#a6e22e>TeamsJSON</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>fetchAndUnmarshal</span>(<span style=color:#e6db74>&#34;nba-url.here.com&#34;</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>teams</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>teams</span>.<span style=color:#a6e22e>League</span>.<span style=color:#a6e22e>Standard</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Then I needed to take this collection and create Graph &ldquo;Nodes&rdquo;</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>  <span style=color:#a6e22e>teams</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>fetchTeams</span>()
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>createTeams</span>(<span style=color:#a6e22e>teams</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>  }
+</span></span></code></pre></div><p>Heres what the create function looks like:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>createTeams</span>(<span style=color:#a6e22e>ft</span> []<span style=color:#a6e22e>FetchedTeam</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>driver</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>createDriver</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>closeDriver</span>(<span style=color:#a6e22e>driver</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>session</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>createSession</span>(<span style=color:#a6e22e>driver</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>created</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>WriteTransaction</span>(<span style=color:#a6e22e>createTeamsTXWork</span>(<span style=color:#a6e22e>ft</span>))
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;created:&#34;</span>, <span style=color:#a6e22e>created</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In the code snippet above, the Go function creates a neo4j driver,
+and begins a session where a transaction is made with the database.
+Within transaction, I can write some Cypher the driver will execute.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>createTeamsQuery</span> = <span style=color:#e6db74>`
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>MERGE (team:Team { fullName: $fullName, shortName: $shortName, city: $city, tricode: $tricode })
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>createTeamsTXWork</span>(<span style=color:#a6e22e>ft</span> []<span style=color:#a6e22e>FetchedTeam</span>) <span style=color:#a6e22e>neo4j</span>.<span style=color:#a6e22e>TransactionWork</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>tx</span> <span style=color:#a6e22e>neo4j</span>.<span style=color:#a6e22e>Transaction</span>) (<span style=color:#66d9ef>interface</span>{}, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>team</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>ft</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>params</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>interface</span>{}{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;fullName&#34;</span>:  <span style=color:#a6e22e>team</span>.<span style=color:#a6e22e>FullName</span>,
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;shortName&#34;</span>: <span style=color:#a6e22e>team</span>.<span style=color:#a6e22e>TeamShortName</span>,
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;city&#34;</span>:      <span style=color:#a6e22e>team</span>.<span style=color:#a6e22e>City</span>,
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;tricode&#34;</span>:   <span style=color:#a6e22e>team</span>.<span style=color:#a6e22e>Tricode</span>,
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>tx</span>.<span style=color:#a6e22e>Run</span>(<span style=color:#a6e22e>createTeamsQuery</span>, <span style=color:#a6e22e>params</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Err</span>()
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Next</span>() {
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Record</span>().<span style=color:#a6e22e>Values</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Here I create nodes with a label of <code>Team</code> with the defining chacteristics
+of having a full name, a short name, city, and tricode for each team that is received
+from the &ldquo;fetchTeams&rdquo; function.</p><p>A similar process was done to load the NBA players of the 2021 season. Namely, all
+of the players were fetched from the NBA api, a driver and neo4j session was created
+and a transaction took place where we created nodes in our graph database of each player.</p><p>Using Neo4j&rsquo;s database browser, this is what the player data looks like</p><p><img src=/neo4j-25-players.png alt="25 Neo4j player nodes"></p><p>At this point the data doesn&rsquo;t look interesting because we only have two kinds of
+nodes in our graph database. So, at this point I used the neo4j driver in a similar
+process to relate the players to their respective teams. Here is the Cypher query
+that was executed per player per team.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>relatePlaysForQuery</span> = <span style=color:#e6db74>`
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>MATCH (p:Player { firstName: $firstName, lastName: $lastName })
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>MATCH (t:Team { city: $city, fullName: $fullName })
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>MERGE (p)-[pf:PLAYS_FOR { seasonStart: $seasonStart }]-&gt;(t)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>SET pf.seasonEnd = $seasonEnd
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>RETURN p, t
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>`</span>
+</span></span></code></pre></div><p>What impresses me the most about Cypher how succint the statement is to describe the
+relationship between team and player. We describe a one way relationship between
+the two nodes, and give it a title <code>PLAYS_FOR</code> and we can even pass key-value pairs
+to describe the attributes of the relationship like the years that the player had
+started and ended their seasons with a team. But what do these relationships
+look like visually?</p><p><img src=/neo4j-2620-nodes.png alt="Too Many Nodes"></p><p>This amount of data with can be overwhelming. However, Neo4j and Cypher not only have
+powerful ways of creating many-to-many relationships, but also quickly querying for
+specific data. Coming back to the example of finding all of Ben Simmon&rsquo;s potential teammates.</p><p><img src=/neo4j-simmons-teammates.png alt="Graph of Ben Simmons Teammates"></p><p>Looking at the data, we gain some interesting insights as well, like all the players who
+have played on both teams that Ben Simmons has played for. We can tell that the
+dataset is incomplete. Because only the years of season start and end are captured, we
+can&rsquo;t distinguish the players who were Ben Simmons teammates from the players that were
+involved in a trade for Ben Simmons (James Harden). That will have to be refined&mldr;</p><p>Hopefully, I&rsquo;ve conveyed my excitement for this technology, and will be writing more
+about it in future posts!</p></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><span class="button next"><a href=https://EthanEFung.github.io/posts/react-keys-in-list/><span class=button__text>Why Your React List of Items is Not Changing</span>
+<span class=button__icon>→</span></a></span></div></div></div></div><footer class=footer><div class=footer__inner><div class=copyright><span>© 2022 Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>:: Theme made by <a href=https://twitter.com/panr>panr</a></span></div></div></footer><script src=https://EthanEFung.github.io/assets/main.js></script>
+<script src=https://EthanEFung.github.io/assets/prism.js></script></div></body></html>
