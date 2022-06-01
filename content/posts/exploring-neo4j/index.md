@@ -1,7 +1,7 @@
 ---
 title: "Simplifying Data Relationships - Exploring Neo4j"
 date: 2022-05-29T17:34:31-07:00
-cover: "/neo4j-cover.png"
+cover: "./neo4j-cover.png"
 tags: ["Graph DB", "Neo4j", "Cypher", "NBA"]
 keywords: ["Cypher", "Neo4j"]
 description: ""
@@ -206,7 +206,7 @@ and a transaction took place where we created nodes in our graph database of eac
 
 Using Neo4j's database browser, this is what the player data looks like
 
-![25 Neo4j player nodes](/neo4j-25-players.png)
+![25 Neo4j player nodes](./neo4j-25-players.png)
 
 At this point the data doesn't look interesting because we only have two kinds of
 nodes in our graph database. So, at this point I used the neo4j driver in a similar
@@ -229,13 +229,13 @@ to describe the attributes of the relationship like the years that the player ha
 started and ended their seasons with a team. But what do these relationships
 look like visually?
 
-![Too Many Nodes](/neo4j-2620-nodes.png)
+![Too Many Nodes](./neo4j-2620-nodes.png)
 
 This amount of data with can be overwhelming. However, Neo4j and Cypher not only have
 powerful ways of creating many-to-many relationships, but also quickly querying for
 specific data. Coming back to the example of finding all of Ben Simmon's potential teammates.
 
-![Graph of Ben Simmons Teammates](/neo4j-simmons-teammates.png)
+![Graph of Ben Simmons Teammates](./neo4j-simmons-teammates.png)
 
 Looking at the data, we gain some interesting insights as well, like all the players who
 have played on both teams that Ben Simmons has played for. We can tell that the
