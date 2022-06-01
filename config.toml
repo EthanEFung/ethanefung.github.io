@@ -1,5 +1,5 @@
 title = "Ethan E. Fung"
-baseURL = "https://EthanEFung.github.io"
+baseURL = "//EthanEFung.github.io/"
 languageCode = "en-us"
 theme = "terminal"
 paginate = 5
