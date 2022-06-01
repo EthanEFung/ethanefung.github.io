@@ -1,5 +1,5 @@
 ---
-title: "I built a graph database - Exploring Neo4j"
+title: "Simplifying Data Relationships - Exploring Neo4j"
 date: 2022-05-29T17:34:31-07:00
 cover: "/neo4j-cover.png"
 tags: ["Graph DB", "Neo4j", "Cypher", "NBA"]
@@ -72,14 +72,13 @@ Only once we receive the collection of teams, can we compare the team id of the 
 object against each team object and infer that Ben Simmons was drafted to the
 Philadelphia 76ers in 2016.
 
-The usage of ids or keys to show relationships between entities, is a modern standard
-practice when building databases because it can be inpractical to fit all of
-an api's data into a single response. Generally REST apis will have several
-endpoints that clients can use, but the data the client receives from one requests
-might be too little (such as the example here) or too much. However, utilizing ids or
-keys and requiring that clients make subsequent requests has the benefit of allowing
-REST apis to scale data and give the client the most relevant information while
-keeping response payloads minimal in size.
+The usage of ids or keys to show relationships between entities, is a standard
+practice because it can be inpractical to fit all of an api's data into a single
+response. Generally REST apis will have several endpoints that clients can use, but the
+data the client receives from one requests might be too little (such as the example
+here) or too much. However, utilizing ids or keys and requiring that clients make
+subsequent requests has the benefit of allowing REST apis to scale data and give the
+client the most relevant information while keeping response payloads minimal in size.
 
 One downside to this approach is the difficultly clients face modeling many-to-many
 relationships. For example if I was interested in knowing which players have played on
@@ -101,7 +100,7 @@ I want to answer questions like the question posed in the section above, but wit
 the complexity abstracted away. This is where I learned about Cypher: the
 querying language that takes a similiar declarative style as SQL but without the
 complex joins required in relational databases to request related data.
-Using, Cypher I'd be able to write a simple statements about multiple collections, but
+Using, Cypher I'm able to write simple statements about multiple collections, but
 first I needed to build out the dataset. To build this set I utilized Neo4j as my graph
 database.
 
@@ -197,11 +196,11 @@ func createTeamsTXWork(ft []FetchedTeam) neo4j.TransactionWork {
 	}
 }
 ```
-Here I create a node with a label of `Team` with the defining chacteristics
+Here I create nodes with a label of `Team` with the defining chacteristics
 of having a full name, a short name, city, and tricode for each team that is received
 from the "fetchTeams" function.
 
-A similar process was done to load the NBA players of the 2021 season namely. All
+A similar process was done to load the NBA players of the 2021 season. Namely, all
 of the players were fetched from the NBA api, a driver and neo4j session was created
 and a transaction took place where we created nodes in our graph database of each player.
 
@@ -209,7 +208,7 @@ Using Neo4j's database browser, this is what the player data looks like
 
 ![25 Neo4j player nodes](/neo4j-25-players.png)
 
-At this point the data doesn't look interesting because we only have two classes of
+At this point the data doesn't look interesting because we only have two kinds of
 nodes in our graph database. So, at this point I used the neo4j driver in a similar
 process to relate the players to their respective teams. Here is the Cypher query
 that was executed per player per team.
@@ -224,23 +223,25 @@ RETURN p, t
 `
 ```
 What impresses me the most about Cypher how succint the statement is to describe the
-relationship between team and player. We describe the one way relationship between
-the two nodes, and give it a title `PLAYS_FOR` and can even pass key-value pairs
+relationship between team and player. We describe a one way relationship between
+the two nodes, and give it a title `PLAYS_FOR` and we can even pass key-value pairs
 to describe the attributes of the relationship like the years that the player had
-started and ended their seasons with a particular team. But what do these relationships
+started and ended their seasons with a team. But what do these relationships
 look like visually?
 
 ![Too Many Nodes](/neo4j-2620-nodes.png)
 
-To point out that this amount of data with this amount of relationships can be
-overwhelming. However, Neo4j and Cypher not only have powerful ways of creating
-many-to-many relationships, but also quickly querying for specific data. Coming back to
-the example of finding all of Ben Simmon's teammates.
+This amount of data with can be overwhelming. However, Neo4j and Cypher not only have
+powerful ways of creating many-to-many relationships, but also quickly querying for
+specific data. Coming back to the example of finding all of Ben Simmon's potential teammates.
 
 ![Graph of Ben Simmons Teammates](/neo4j-simmons-teammates.png)
 
-Looking at the data, we gain some interesting insights as well, like James Harden, has
-also played for both the teams that Ben Simmons has played for.
+Looking at the data, we gain some interesting insights as well, like all the players who
+have played on both teams that Ben Simmons has played for. We can tell that the
+dataset is incomplete. Because only the years of season start and end are captured, we
+can't distinguish the players who were Ben Simmons teammates from the players that were
+involved in a trade for Ben Simmons (James Harden). That will have to be refined...
 
 Hopefully, I've conveyed my excitement for this technology, and will be writing more
-about it in future posts.
+about it in future posts!
